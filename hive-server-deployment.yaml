@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hive-server
+  labels:
+    app: hive-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hive-server
+  template:
+    metadata:
+      labels:
+        app: hive-server
+    spec:
+      containers:
+      - name: hive-server
+        image: my-hive:latest
+        ports:
+        - containerPort: 10000
+        env:
+        - name: HIVE_HOME
+          value: "/opt/hive"
+        - name: HADOOP_HOME
+          value: "/opt/hadoop"
+        args: ["hive --service hiveserver2"]

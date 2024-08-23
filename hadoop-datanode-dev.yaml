@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hadoop-datanode
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hadoop-datanode
+  template:
+    metadata:
+      labels:
+        app: hadoop-datanode
+    spec:
+      containers:
+      - name: hadoop-datanode
+        image: my-hadoop-datanode:latest
+        ports:
+        - containerPort: 9864
+        volumeMounts:
+        - name: datanode-storage
+          mountPath: /hadoop/dfs/data
+      volumes:
+      - name: datanode-storage
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hadoop-datanode
+spec:
+  selector:
+    app: hadoop-datanode
+  ports:
+  - protocol: TCP
+    port: 9864
+    targetPort: 9864

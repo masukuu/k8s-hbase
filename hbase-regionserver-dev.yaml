@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hbase-regionserver
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hbase-regionserver
+  template:
+    metadata:
+      labels:
+        app: hbase-regionserver
+    spec:
+      containers:
+      - name: hbase-regionserver
+        image: my-hbase-regionserver:latest
+        ports:
+        - containerPort: 16020
+        - containerPort: 16030
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hbase-regionserver
+spec:
+  selector:
+    app: hbase-regionserver
+  ports:
+  - protocol: TCP
+    port: 16020
+    targetPort: 16020
+  - protocol: TCP
+    port: 16030
+    targetPort: 16030
